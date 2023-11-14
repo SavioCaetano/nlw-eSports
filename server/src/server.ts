@@ -1,30 +1,14 @@
-// HTTP METHODS / API RESTful
-// GET, POST, PUT (edição geral), PATCH (edição singular, específica), DELETE
-/* HTTP Codes (200, 300, 400, 500)
- - Iniciados em 2: Status de sucesso
- - Iniciados em 3: Redirecionamento
- - Iniciados em 4: Erros gerados pela aplicação
- - Iniciados em 5: Erros inesperados
-*/
-
-/** Tipos de Parâmetros
- * Query: São nomeados e vêm através do "?". Usado para persistir estado => Ex: localhost:8000/ads?page=2&sort=title
- * Route: Reconhecidos intrícicamente. Usado para idêntificação de recurso => Ex: localhost:8000/ads/5
- * Body: Enviar várias informações em uma requisição (forms).
- */
-
 import express from 'express';
 import cors from 'cors';
 import { PrismaClient } from '@prisma/client';
-import { converHourStringToMinutes } from './utils/convert-hour-string-to-minutes';
-import { converMinutesToHourString } from './utils/convert-minutes-to-hour-string';
+import { convertHourStringToMinutes } from './utils/convert-hour-string-to-minutes';
+import { convertMinutesToHourString } from './utils/convert-minutes-to-hour-string';
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
 const prisma = new PrismaClient();
-
 
 app.get('/games', async (request, response) => {
     const games = await prisma.game.findMany({
@@ -51,8 +35,8 @@ app.post('/games/:id/ads', async (request, response) => {
             yearsPlaying: body.yearsPlaying,
             discord: body.discord,
             weekDays: body.weekDays.join(','),
-            hourStart: converHourStringToMinutes(body.hourStart),
-            hourEnd: converHourStringToMinutes(body.hourEnd),
+            hourStart: convertHourStringToMinutes(body.hourStart),
+            hourEnd: convertHourStringToMinutes(body.hourEnd),
             useVoiceChannel: body.useVoiceChannel,
         }
     });
@@ -85,8 +69,8 @@ app.get('/games/:id/ads', async (request, response) => {
         return {
             ...ad,
             weekDays: ad.weekDays.split(','),
-            hourStart: converMinutesToHourString(ad.hourStart),
-            hourEnd: converMinutesToHourString(ad.hourEnd),
+            hourStart: convertMinutesToHourString(ad.hourStart),
+            hourEnd: convertMinutesToHourString(ad.hourEnd),
         }
     }));
 });
@@ -107,6 +91,5 @@ app.get('/ads/:id/discord', async (request, response) => {
         discord: ad.discord,
     })
 });
-
 
 app.listen(8000);

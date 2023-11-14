@@ -1,5 +1,5 @@
 //1140 -> [19, 00] -> ["19", "00"] -> 19:00
-export function converMinutesToHourString(minutesAmount: number) {
+export function convertMinutesToHourString(minutesAmount: number) {
     const hours = Math.floor(minutesAmount / 60);
     const minutes = minutesAmount % 60;
 
